@@ -9,9 +9,9 @@ Those are the parameters.
 
 -listName … List Title
 
--username … Site Collection Admin user who fixes the page.
+-username … (optional) Site Collection Admin user who fixes the page.
 
--password … The password of the above user.
+-password … (optional) The password of the above user.
 
 -formtype … (optional) The target form type. DISPLAY, NEW, EDIT, ALL (The default option is ALL)
 

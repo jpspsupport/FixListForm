@@ -17,18 +17,33 @@ Please note: None of the conditions outlined in the disclaimer above will superc
 
 
 param(
+  [Parameter(Mandatory=$true)]
   $siteUrl,
+  [Parameter(Mandatory=$true)]
   $listName,
   $username,
   $password,
+  [ValidateSet("ALL", "DISPLAY", "EDIT", "NEW")]
   $formtype = "ALL",
-  $force = $false
+  [switch]$force
 )
 $ErrorActionPreference = "Stop"
 [void][System.Reflection.Assembly]::Load("Microsoft.SharePoint.Client, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c")
 [void][System.Reflection.Assembly]::Load("Microsoft.SharePoint.Client.Runtime, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c")
+
 $context = New-Object Microsoft.SharePoint.Client.ClientContext($siteUrl)
-$secpass = ConvertTo-SecureString $password -AsPlainText -Force
+
+if ($username -eq $null)
+{
+  $Cred = Get-Credential
+  $username = $Cred.UserName
+  $secpass = $Cred.Password
+}
+else
+{
+  $secpass = ConvertTo-SecureString $password -AsPlainText -Force
+}
+
 $context.Credentials = New-Object Microsoft.SharePoint.Client.SharePointOnlineCredentials($username, $secpass)
 $web = $context.Web
 $list = $web.Lists.GetByTitle($listName)
@@ -66,6 +81,7 @@ function CreateView($fileName, $ControlMode, $FormType)
     $file = $parentFolder.Files.AddTemplateFile($url, $fileType)
     $context.Load($file)
     $context.ExecuteQuery()
+    Write-Host "The page" $url "is recreated."
   }
   else
   {
