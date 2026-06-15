@@ -1,21 +1,35 @@
 # FixListForm 
 
-When user accidentally removed the SharePoint List form from any type of Lists. It is difficult to revert the changes. This script works on classic UX only.
+When user accidentally removed the SharePoint List form from any type of Lists. It is difficult to revert the changes. 
+Modern UX should work without forms. However, when forms are removed, certain other functionalties will be affected.
 This script is to fix those forms by adding additional webpart or recreate the form pages.
+
+*NOTE*: Before running, please be sure to Allow Custom Script for the target site. That is not automated in this script.
 
 Those are the parameters.
 
--siteUrl … Site (Web) URL
+## FixListForm.ps1
 
--listName … List Title
+|Argument|Explanation|
+|--|--|
+|DLLPath|DLL path of the CSOM package. |
+|siteUrl|Site (Web) URL|
+|listName|List Title|
+|username|Site Collection Admin user who fixes the page.|
+|password|The password of the above user.|
+|formtype|The target form type. DISPLAY, NEW, EDIT, ALL (The default option is ALL)|
+|force|Recreate the page when $true is specified. Otherwise, adding list form webpart on that page.|
 
--username … (optional) Site Collection Admin user who fixes the page.
+## PnPFixListForm.ps1
 
--password … (optional) The password of the above user.
+|Argument|Explanation|
+|--|--|
+|ApplicationID|PnP Application ID to connect as PnP.PowerShell app.|
+|siteUrl|Site (Web) URL|
+|listName|List Title|
+|formtype|The target form type. DISPLAY, NEW, EDIT, ALL (The default option is ALL)|
+|force|Recreate the page when $true is specified. Otherwise, adding list form webpart on that page.|
 
--formtype … (optional) The target form type. DISPLAY, NEW, EDIT, ALL (The default option is ALL)
-
--force … (optional) Recreate the page when $true is specified. Otherwise, adding list form webpart on that page.
 
 ## Reference
 Original Code is from Japan SharePoint Support Team Blog.

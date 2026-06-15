@@ -18,32 +18,23 @@ Please note: None of the conditions outlined in the disclaimer above will superc
 
 param(
   [Parameter(Mandatory=$true)]
-  $DLLPath,
+  $ApplicationId,
   [Parameter(Mandatory=$true)]
   $siteUrl,
   [Parameter(Mandatory=$true)]
   $listName,
-  [Parameter(Mandatory=$true)]
-  $username,
-  [Parameter(Mandatory=$true)]
-  $password,
   [ValidateSet("ALL", "DISPLAY", "EDIT", "NEW")]
   $formtype = "ALL",
   [switch]$force
 )
 $ErrorActionPreference = "Stop"
-#[void][System.Reflection.Assembly]::Load("Microsoft.SharePoint.Client, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c")
-#[void][System.Reflection.Assembly]::Load("Microsoft.SharePoint.Client.Runtime, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c")
-Add-Type -Path ($DLLPath + "\Microsoft.SharePoint.Client.dll")
-Add-Type -Path ($DLLPath + "\Microsoft.SharePoint.Client.Runtime.dll")
 
-$context = New-Object Microsoft.SharePoint.Client.ClientContext($siteUrl)
+Connect-PnPOnline $siteUrl -ApplicationId $ApplicationId -Interactive
+# This might not work, but calling just in case
+Set-PnPSite -NoScriptSite $false
+$context = Get-PnPContext
 
-#$username = "dummy@tenant.onmicrosoft.com"
-$secpass = ConvertTo-SecureString $password -AsPlainText -Force
-$context.Credentials = New-Object Microsoft.SharePoint.Client.SharePointOnlineCredentials($username, $secpass, $true, $true)
-
-$web = $context.Web
+$web = Get-PnPWeb
 $list = $web.Lists.GetByTitle($listName)
 $context.Load($list)
 $context.ExecuteQuery()
